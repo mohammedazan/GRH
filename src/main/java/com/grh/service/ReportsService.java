@@ -19,6 +19,20 @@ import com.grh.dto.FrequentPatientDto;
 import com.grh.mapper.AppointmentMapper;
 import com.grh.model.Appointment;
 
+/*
+ReportsService
+يستعمل Mongo Aggregation:
+getAppointmentsByDay(date)
+countAppointmentsPerDoctor()
+كتخرج List<CountPerDoctorDto>
+countAppointmentsPerSpecialty()
+كتدير $lookup بين appointments و doctors
+getFrequentPatients(days)
+كتجيب appointments فـ آخر X يوم
+كتجروب على patientId
+اللي عددهم ≥ threshold → FrequentPatientDto
+ */
+
 @Service
 public class ReportsService {
   private final MongoTemplate mongoTemplate;

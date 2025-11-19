@@ -14,3 +14,6 @@ public class JacksonConfig {
     return mapper;
   }
 }
+/* 
+كيقول لـ Jackson كيفاش يتعامل مع التواريخ (Java Time API – LocalDate/LocalTime)
+*/

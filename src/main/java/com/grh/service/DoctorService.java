@@ -25,6 +25,23 @@ import com.grh.model.WorkSlot;
 import com.grh.repository.AppointmentRepository;
 import com.grh.repository.DoctorRepository;
 
+/*
+ * DoctorService
+هنا كاين منطق مهم بزاف:
+CRUD ديال Doctor
+validateWorkSlots
+كيتأكد أن:
+weekday بين 1 و 7
+start < end
+ما كايناش workSlots متداخلة لطبيب واحد
+Search Doctor (بالإسم أو التخصص)
+getAvailableSlots(doctorId, date)
+يجيب workSlots ديال داك اليوم
+يجيب المواعيد المحجوزة فداك اليوم للطبيب
+يستعمل خوارزمية باش يطرح المحجوز من النوافذ ديال العمل
+ويرجع List<TimeIntervalDto> فيها الفترات الفارغة
+ */
+
 @Service
 public class DoctorService {
   private static final Logger log = LoggerFactory.getLogger(DoctorService.class);
