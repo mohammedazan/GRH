@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-
+//WorkSlotDto (باش تبعت workSlots للطبيب)
 public class WorkSlotDto {
   @Min(1)
   @Max(7)

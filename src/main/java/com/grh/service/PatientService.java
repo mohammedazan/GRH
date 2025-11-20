@@ -14,6 +14,19 @@ import com.grh.exception.NotFoundException;
 import com.grh.mapper.PatientMapper;
 import com.grh.model.Patient;
 import com.grh.repository.PatientRepository;
+/*
+ * PatientService
+مسؤول على:
+createPatient
+updatePatient
+deletePatient
+getById
+searchByName
+يستعمل:
+PatientRepository
+PatientMapper
+فيه Logs باش تقدر تشوف فـ console شنو كيوقع.
+ */
 
 @Service
 public class PatientService {

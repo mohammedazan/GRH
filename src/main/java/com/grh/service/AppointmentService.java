@@ -25,6 +25,31 @@ import com.grh.model.WorkSlot;
 import com.grh.repository.AppointmentRepository;
 import com.grh.repository.DoctorRepository;
 import com.grh.repository.PatientRepository;
+/*
+🟢 AppointmentService
+هذا قلب المشروع 👑A
+مسؤول على:
+createAppointment(AppointmentCreateRequest)
+يتحقق أن:
+patient موجود
+doctor موجود
+الطبيب خدام فداك النهار (validateDoctorAvailability)
+الوقت داخل واحد من الـ WorkSlots
+ما كاينش تعارض مع موعد آخر لنفس الطبيب (checkConflict)
+إذا كلشي OK → يحفظ الموعد بـ status=SCHEDULED
+updateAppointment
+نفس الشيكات ديال create
+يزيد يتحقق أن appointment اصلاً موجود
+cancelAppointment
+يبدّل status → CANCELLED
+getByDoctor / getByPatient / getByDate / getAllUpcoming ...
+autoTerminatePastAppointments() — Job مجدول
+فيها @Scheduled(cron = "...")
+كل يوم/فترة:
+تجيب المواعيد لي فالماضي وحالتها ماشي TERMINATED
+تغيّر status ديالها لـ TERMINATED
+هادي اللي كتعطي الإحساس أن النظام “حيّ” وكيخدم بوحدو.
+ */
 
 @Service
 public class AppointmentService {

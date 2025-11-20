@@ -2,7 +2,7 @@ package com.grh.dto;
 
 import java.time.LocalTime;
 import com.fasterxml.jackson.annotation.JsonFormat;
-
+//(باش ترجع الفترات المتاحة free slots)
 public class TimeIntervalDto {
   @JsonFormat(pattern = "HH:mm")
   private LocalTime start;

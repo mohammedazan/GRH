@@ -20,7 +20,13 @@ import com.grh.model.WorkSlot;
 import com.grh.repository.AppointmentRepository;
 import com.grh.repository.DoctorRepository;
 import com.grh.repository.PatientRepository;
-
+/*
+ * Class كيتمشى فـ startup
+كيعمر قاعدة البيانات بــ:
+شوية ديال المرضى
+شوية ديال الأطباء (مع workSlots)
+شوية ديال المواعيد للتجريب
+ */
 @Configuration
 public class DataSeeder {
   private static final Logger log = LoggerFactory.getLogger(DataSeeder.class);

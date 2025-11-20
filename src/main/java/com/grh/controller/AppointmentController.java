@@ -53,7 +53,7 @@ public class AppointmentController {
   @PutMapping("/{id}")
   public ResponseEntity<AppointmentResponse> update(@PathVariable String id, @Valid @RequestBody AppointmentUpdateRequest request) {
     return ResponseEntity.ok(appointmentService.update(id, request));
-  }
+  } 
 
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> delete(@PathVariable String id) {

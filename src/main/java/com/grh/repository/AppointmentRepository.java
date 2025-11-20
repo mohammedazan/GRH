@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import com.grh.model.Appointment;
 import com.grh.model.AppointmentStatus;
-
+//→ تُستعمل من طرف الـ Services باش تجيب / تكتب البيانات.
 public interface AppointmentRepository extends MongoRepository<Appointment, String> {
   List<Appointment> findByDoctorId(String doctorId);
   List<Appointment> findByPatientId(String patientId);
