@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>GRH - Gestionnaire de Rendez-vous Hospitaliers</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      background: #f4f5fb;
+      color: #1f2933;
+    }
+
+    header {
+      background: #0f766e;
+      color: #ecfdf5;
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 10px rgba(15, 118, 110, 0.35);
+    }
+
+    header .logo {
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    header nav a {
+      color: #ecfdf5;
+      text-decoration: none;
+      margin-left: 18px;
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
+
+    header nav a:hover {
+      text-decoration: underline;
+      opacity: 1;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 30px auto 40px auto;
+      padding: 0 16px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #0f766e, #14b8a6);
+      color: #ecfdf5;
+      border-radius: 18px;
+      padding: 30px 24px;
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1.4fr);
+      gap: 20px;
+      box-shadow: 0 18px 35px rgba(15, 118, 110, 0.35);
+    }
+
+    .hero-left h1 {
+      font-size: 2rem;
+      margin-bottom: 12px;
+    }
+
+    .hero-left p {
+      margin-bottom: 18px;
+      font-size: 0.98rem;
+      max-width: 560px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .btn-primary,
+    .btn-outline {
+      border-radius: 999px;
+      padding: 10px 20px;
+      font-size: 0.95rem;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.12s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-primary {
+      background: #ecfdf5;
+      color: #0f766e;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(15, 118, 110, 0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(15, 118, 110, 0.55);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: #ecfdf5;
+      border: 1px solid rgba(236, 253, 245, 0.7);
+    }
+
+    .btn-outline:hover {
+      background: rgba(236, 253, 245, 0.1);
+      transform: translateY(-1px);
+    }
+
+    .hero-right {
+      background: rgba(15, 23, 42, 0.12);
+      border-radius: 16px;
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .hero-right h2 {
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+    }
+
+    .stat-row:last-child {
+      border-bottom: none;
+    }
+
+    .stat-label {
+      opacity: 0.9;
+    }
+
+    .stat-value {
+      font-weight: 600;
+    }
+
+    .sections {
+      margin-top: 30px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 18px 16px;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 1px solid #e5e7eb;
+    }
+
+    .card h3 {
+      font-size: 1.05rem;
+      margin-bottom: 8px;
+    }
+
+    .card p {
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+      color: #4b5563;
+    }
+
+    .card a {
+      font-size: 0.9rem;
+      color: #0f766e;
+      font-weight: 600;
+      text-decoration: none;
+      margin-top: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .card a:hover {
+      text-decoration: underline;
+    }
+
+    footer {
+      text-align: center;
+      padding: 18px;
+      font-size: 0.85rem;
+      color: #6b7280;
+    }
+
+    @media (max-width: 768px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="logo">GRH – Rendez-vous Hospitaliers</div>
+  <nav>
+    <a href="index.html">Accueil</a>
+    <a href="patients.html">Patients</a>
+    <a href="doctors.html">Médecins</a>
+    <a href="appointments.html">Rendez-vous</a>
+    <a href="reports.html">Rapports</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="hero-left">
+      <h1>Bienvenue dans le système GRH</h1>
+      <p>
+        Cette application vous permet de gérer les patients, les médecins et les
+        rendez-vous hospitaliers, tout en évitant les conflits d’horaires et en
+        générant des rapports clairs pour le suivi de l’activité.
+      </p>
+      <div class="hero-buttons">
+        <button class="btn-primary" onclick="location.href='appointments.html'">
+          📅 Gérer les rendez-vous
+        </button>
+        <button class="btn-outline" onclick="location.href='reports.html'">
+          📊 Voir les rapports
+        </button>
+      </div>
+    </div>
+
+    <aside class="hero-right">
+      <h2>Vue rapide (données fictives)</h2>
+      <div class="stat-row">
+        <span class="stat-label">Patients enregistrés</span>
+        <span class="stat-value" id="statPatients">—</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Médecins actifs</span>
+        <span class="stat-value" id="statDoctors">—</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Rendez-vous aujourd’hui</span>
+        <span class="stat-value" id="statTodayAppointments">—</span>
+      </div>
+    </aside>
+  </section>
+
+  <section class="sections">
+    <article class="card">
+      <h3>Gestion des patients</h3>
+      <p>
+        Créez, modifiez et supprimez les fiches patients. Recherchez par nom,
+        visualisez l’historique de rendez-vous et mettez à jour les coordonnées.
+      </p>
+      <a href="patients.html">Accéder aux patients →</a>
+    </article>
+
+    <article class="card">
+      <h3>Gestion des médecins</h3>
+      <p>
+        Définissez les spécialités, les créneaux de travail (WorkSlots) et les
+        coordonnées des médecins pour un planning précis.
+      </p>
+      <a href="doctors.html">Accéder aux médecins →</a>
+    </article>
+
+    <article class="card">
+      <h3>Rendez-vous hospitaliers</h3>
+      <p>
+        Planifiez des rendez-vous en garantissant l’absence de conflits d’horaires
+        pour chaque médecin, et suivez le statut (prévu, annulé, terminé).
+      </p>
+      <a href="appointments.html">Gérer les rendez-vous →</a>
+    </article>
+
+    <article class="card">
+      <h3>Rapports & statistiques</h3>
+      <p>
+        Consultez les rendez-vous par jour, par médecin, par spécialité, ainsi que
+        les patients fréquents et les créneaux disponibles.
+      </p>
+      <a href="reports.html">Voir les rapports →</a>
+    </article>
+  </section>
+</main>
+
+<footer>
+  GRH – Mini projet Java &amp; MongoDB • © 2025
+</footer>
+
+<script>
+  // Optionnel : chargement de petites statistiques via ton backend
+  const API_BASE = "http://localhost:8081";
+
+  async function loadQuickStats() {
+    try {
+      // Ces endpoints sont des exemples. Tu peux les adapter à ton backend réel
+      const [patientsRes, doctorsRes, todayAppsRes] = await Promise.all([
+        fetch(API_BASE + "/patients"),
+        fetch(API_BASE + "/doctors"),
+        fetch(API_BASE + "/appointments/day?date=" + new Date().toISOString().slice(0, 10))
+      ]);
+
+      if (patientsRes.ok) {
+        const patients = await patientsRes.json();
+        document.getElementById("statPatients").textContent = patients.length;
+      }
+
+      if (doctorsRes.ok) {
+        const doctors = await doctorsRes.json();
+        document.getElementById("statDoctors").textContent = doctors.length;
+      }
+
+      if (todayAppsRes.ok) {
+        const apps = await todayAppsRes.json();
+        document.getElementById("statTodayAppointments").textContent = apps.length;
+      }
+    } catch (e) {
+      console.warn("Impossible de charger les statistiques rapides :", e);
+    }
+  }
+
+  loadQuickStats();
+</script>
+</body>
+</html>

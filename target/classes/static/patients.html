@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>GRH - Gestion des patients</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      background: #f4f5fb;
+      color: #111827;
+    }
+
+    header {
+      background: #0f766e;
+      color: #ecfdf5;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 10px rgba(15, 118, 110, 0.35);
+    }
+
+    header .logo {
+      font-size: 1.2rem;
+      font-weight: 650;
+    }
+
+    header nav a {
+      color: #ecfdf5;
+      text-decoration: none;
+      margin-left: 14px;
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    header nav a:hover {
+      text-decoration: underline;
+      opacity: 1;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 24px auto 40px auto;
+      padding: 0 16px;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.9fr);
+      gap: 18px;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 16px 14px;
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
+      border: 1px solid #e5e7eb;
+      margin-bottom: 14px;
+    }
+
+    .card h2 {
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+    }
+
+    .card small {
+      color: #6b7280;
+      font-size: 0.8rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      margin-bottom: 4px;
+      color: #374151;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="date"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 7px 8px;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+      background: #f9fafb;
+    }
+
+    textarea {
+      min-height: 60px;
+      resize: vertical;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: 2px solid #0f766e;
+      outline-offset: 1px;
+      background: #ffffff;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    @media (max-width: 700px) {
+      .row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .btn {
+      border-radius: 999px;
+      padding: 8px 16px;
+      font-size: 0.9rem;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.1s ease, box-shadow 0.1s ease, background-color 0.1s ease;
+    }
+
+    .btn-primary {
+      background: #0f766e;
+      color: #ecfdf5;
+      font-weight: 600;
+      box-shadow: 0 3px 8px rgba(15, 118, 110, 0.35);
+    }
+
+    .btn-primary:hover {
+      background: #115e59;
+      transform: translateY(-1px);
+      box-shadow: 0 5px 12px rgba(15, 118, 110, 0.45);
+    }
+
+    .btn-secondary {
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .btn-secondary:hover {
+      background: #d1d5db;
+    }
+
+    .btn-danger {
+      background: #b91c1c;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #991b1b;
+    }
+
+    .btn-sm {
+      padding: 4px 10px;
+      font-size: 0.8rem;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+
+    .message {
+      margin-top: 8px;
+      font-size: 0.85rem;
+      padding: 8px 10px;
+      border-radius: 8px;
+      display: none;
+    }
+
+    .message.error {
+      background: #fef2f2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+    }
+
+    .message.success {
+      background: #ecfdf5;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      font-size: 0.85rem;
+    }
+
+    thead {
+      background: #f3f4f6;
+    }
+
+    th,
+    td {
+      padding: 8px 6px;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    tr:hover {
+      background: #f9fafb;
+    }
+
+    .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: flex-end;
+      margin-top: 4px;
+    }
+
+    .filter-row > div {
+      min-width: 160px;
+      flex: 1;
+    }
+
+    .badge-gender {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .badge-gender-m {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+
+    .badge-gender-f {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .muted {
+      color: #6b7280;
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="logo">GRH – Patients</div>
+  <nav>
+    <a href="index.html">Accueil</a>
+    <a href="patients.html">Patients</a>
+    <a href="doctors.html">Médecins</a>
+    <a href="appointments.html">Rendez-vous</a>
+    <a href="reports.html">Rapports</a>
+  </nav>
+</header>
+
+<main>
+  <h1>Gestion des patients</h1>
+
+  <div class="layout">
+    <!-- Colonne gauche : formulaire patient -->
+    <section>
+      <div class="card">
+        <h2>Nouveau / Modifier un patient</h2>
+        <small>Gérez les informations de base des patients. Ces données seront utilisées lors de la prise de rendez-vous.</small>
+
+        <form id="patientForm" style="margin-top: 10px;">
+          <input type="hidden" id="patientId" />
+
+          <label for="fullNameInput">Nom complet</label>
+          <input type="text" id="fullNameInput" required />
+
+          <div class="row">
+            <div>
+              <label for="dateOfBirthInput">Date de naissance</label>
+              <input type="date" id="dateOfBirthInput" />
+            </div>
+            <div>
+              <label for="genderSelect">Sexe</label>
+              <select id="genderSelect">
+                <option value="">Non spécifié</option>
+                <option value="M">Homme</option>
+                <option value="F">Femme</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label for="phoneInput">Téléphone</label>
+              <input type="tel" id="phoneInput" placeholder="+2126..." />
+            </div>
+            <div>
+              <label for="emailInput">Email</label>
+              <input type="email" id="emailInput" placeholder="patient@example.com" />
+            </div>
+          </div>
+
+          <label for="addressInput">Adresse</label>
+          <textarea id="addressInput" placeholder="Adresse complète, ville..."></textarea>
+
+          <div class="actions" style="margin-top: 10px;">
+            <button type="submit" class="btn btn-primary" id="submitBtn">
+              💾 Enregistrer le patient
+            </button>
+            <button type="button" class="btn btn-secondary" id="resetBtn">
+              ↺ Réinitialiser
+            </button>
+          </div>
+
+          <div id="formMessage" class="message"></div>
+        </form>
+      </div>
+    </section>
+
+    <!-- Colonne droite : liste + recherche -->
+    <section>
+      <div class="card">
+        <h2>Liste des patients</h2>
+        <small>Recherchez un patient par nom, puis modifiez ou supprimez sa fiche si nécessaire.</small>
+
+        <div class="filter-row">
+          <div>
+            <label for="searchNameInput">Recherche par nom</label>
+            <input type="text" id="searchNameInput" placeholder="Nom du patient..." />
+          </div>
+        </div>
+
+        <div id="listMessage" class="message" style="margin-top: 8px;"></div>
+
+        <table>
+          <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Infos</th>
+            <th>Contact</th>
+            <th>Actions</th>
+          </tr>
+          </thead>
+          <tbody id="patientsTableBody">
+          <!-- rempli en JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</main>
+
+<script>
+  const API_BASE = "http://localhost:8081";
+  const PATIENTS_API = API_BASE + "/patients";
+
+  const patientForm = document.getElementById("patientForm");
+  const patientIdInput = document.getElementById("patientId");
+  const fullNameInput = document.getElementById("fullNameInput");
+  const dateOfBirthInput = document.getElementById("dateOfBirthInput");
+  const genderSelect = document.getElementById("genderSelect");
+  const phoneInput = document.getElementById("phoneInput");
+  const emailInput = document.getElementById("emailInput");
+  const addressInput = document.getElementById("addressInput");
+
+  const submitBtn = document.getElementById("submitBtn");
+  const resetBtn = document.getElementById("resetBtn");
+  const formMessage = document.getElementById("formMessage");
+
+  const searchNameInput = document.getElementById("searchNameInput");
+  const listMessage = document.getElementById("listMessage");
+  const patientsTableBody = document.getElementById("patientsTableBody");
+
+  let allPatients = [];
+
+  function showMessage(el, text, type) {
+    el.textContent = text;
+    el.classList.remove("error", "success");
+    if (!text) {
+      el.style.display = "none";
+      return;
+    }
+    el.classList.add(type === "error" ? "error" : "success");
+    el.style.display = "block";
+  }
+
+  function resetForm() {
+    patientForm.reset();
+    patientIdInput.value = "";
+    submitBtn.textContent = "💾 Enregistrer le patient";
+    showMessage(formMessage, "", "success");
+  }
+
+  resetBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    resetForm();
+  });
+
+  async function loadPatients() {
+    try {
+      showMessage(listMessage, "Chargement des patients…", "success");
+      const res = await fetch(PATIENTS_API);
+      if (!res.ok) {
+        showMessage(listMessage, "Impossible de charger les patients.", "error");
+        return;
+      }
+      const data = await res.json();
+      allPatients = data;
+      renderPatients();
+      showMessage(listMessage, "", "success");
+    } catch (e) {
+      console.error(e);
+      showMessage(listMessage, "Erreur réseau lors du chargement des patients.", "error");
+    }
+  }
+
+  function renderPatients() {
+    const filter = (searchNameInput.value || "").toLowerCase();
+    patientsTableBody.innerHTML = "";
+
+    const filtered = allPatients.filter(p => {
+      const name = (p.fullName || p.name || "").toLowerCase();
+      return !filter || name.includes(filter);
+    });
+
+    if (!filtered.length) {
+      const tr = document.createElement("tr");
+      const td = document.createElement("td");
+      td.colSpan = 4;
+      td.textContent = "Aucun patient ne correspond aux critères.";
+      tr.appendChild(td);
+      patientsTableBody.appendChild(tr);
+      return;
+    }
+
+    filtered.forEach(p => {
+      const tr = document.createElement("tr");
+
+      const gender = (p.gender || "").toUpperCase();
+      let genderHtml = '<span class="badge-gender">Non spécifié</span>';
+      if (gender === "M") {
+        genderHtml = '<span class="badge-gender badge-gender-m">Homme</span>';
+      } else if (gender === "F") {
+        genderHtml = '<span class="badge-gender badge-gender-f">Femme</span>';
+      }
+
+      const dob = p.dateOfBirth ? p.dateOfBirth : "—";
+
+      const contactHtml = [
+        p.phone ? "📞 " + p.phone : "",
+        p.email ? "✉️ " + p.email : ""
+      ].filter(Boolean).join("<br>");
+
+      const addressHtml = p.address
+        ? `<div class="muted">${p.address}</div>`
+        : '<div class="muted">Adresse non renseignée</div>';
+
+      tr.innerHTML = `
+        <td>${p.fullName || "—"}</td>
+        <td>
+          ${genderHtml}<br>
+          <span class="muted">Né(e) le : ${dob}</span><br>
+          ${addressHtml}
+        </td>
+        <td>${contactHtml || "—"}</td>
+        <td></td>
+      `;
+
+      const actionsTd = tr.lastElementChild;
+
+      const editBtn = document.createElement("button");
+      editBtn.className = "btn btn-secondary btn-sm";
+      editBtn.textContent = "Modifier";
+      editBtn.onclick = () => fillFormForEdit(p);
+
+      const deleteBtn = document.createElement("button");
+      deleteBtn.className = "btn btn-danger btn-sm";
+      deleteBtn.textContent = "Supprimer";
+      deleteBtn.onclick = () => deletePatient(p.id);
+
+      actionsTd.appendChild(editBtn);
+      actionsTd.appendChild(deleteBtn);
+
+      patientsTableBody.appendChild(tr);
+    });
+  }
+
+  function fillFormForEdit(p) {
+    patientIdInput.value = p.id;
+    fullNameInput.value = p.fullName || "";
+    dateOfBirthInput.value = p.dateOfBirth || "";
+    genderSelect.value = p.gender || "";
+    phoneInput.value = p.phone || "";
+    emailInput.value = p.email || "";
+    addressInput.value = p.address || "";
+
+    submitBtn.textContent = "✏️ Mettre à jour le patient";
+    showMessage(formMessage, "Mode édition : vous modifiez un patient existant.", "success");
+  }
+
+  async function deletePatient(id) {
+    if (!confirm("Supprimer ce patient ? Les rendez-vous associés peuvent être impactés.")) return;
+    try {
+      const res = await fetch(PATIENTS_API + "/" + id, { method: "DELETE" });
+      if (!res.ok) {
+        let msg = "Impossible de supprimer ce patient.";
+        try {
+          const err = await res.json();
+          if (err && err.message) msg = err.message;
+        } catch {}
+        alert(msg);
+        return;
+      }
+      await loadPatients();
+    } catch (e) {
+      console.error(e);
+      alert("Erreur réseau lors de la suppression du patient.");
+    }
+  }
+
+  patientForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const id = patientIdInput.value;
+
+    if (!fullNameInput.value) {
+      showMessage(formMessage, "Le nom complet est obligatoire.", "error");
+      return;
+    }
+
+    const body = {
+      fullName: fullNameInput.value,
+      dateOfBirth: dateOfBirthInput.value || null,
+      gender: genderSelect.value || null,
+      phone: phoneInput.value || null,
+      email: emailInput.value || null,
+      address: addressInput.value || null
+    };
+
+    const url = id ? (PATIENTS_API + "/" + id) : PATIENTS_API;
+    const method = id ? "PUT" : "POST";
+
+    try {
+      const res = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      });
+
+      if (!res.ok) {
+        let msg = "Erreur lors de l’enregistrement du patient.";
+        try {
+          const err = await res.json();
+          if (err && err.message) msg = err.message;
+        } catch {}
+        showMessage(formMessage, msg, "error");
+        return;
+      }
+
+      showMessage(
+        formMessage,
+        id ? "Patient mis à jour avec succès." : "Patient créé avec succès.",
+        "success"
+      );
+      resetForm();
+      await loadPatients();
+    } catch (e2) {
+      console.error(e2);
+      showMessage(formMessage, "Erreur réseau lors de l’enregistrement.", "error");
+    }
+  });
+
+  searchNameInput.addEventListener("input", () => renderPatients());
+
+  // Initialisation
+  (function init() {
+    loadPatients();
+  })();
+</script>
+</body>
+</html>

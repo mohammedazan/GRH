@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>GRH - Rapports & statistiques</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      background: #f4f5fb;
+      color: #111827;
+    }
+
+    header {
+      background: #0f766e;
+      color: #ecfdf5;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 10px rgba(15, 118, 110, 0.35);
+    }
+
+    header .logo {
+      font-size: 1.2rem;
+      font-weight: 650;
+    }
+
+    header nav a {
+      color: #ecfdf5;
+      text-decoration: none;
+      margin-left: 14px;
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    header nav a:hover {
+      text-decoration: underline;
+      opacity: 1;
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 24px auto 40px auto;
+      padding: 0 16px;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 16px 14px;
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
+      border: 1px solid #e5e7eb;
+      margin-bottom: 14px;
+    }
+
+    .card h2 {
+      font-size: 1.1rem;
+      margin-bottom: 4px;
+    }
+
+    .card small {
+      color: #6b7280;
+      font-size: 0.8rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      margin-bottom: 4px;
+      color: #374151;
+    }
+
+    input[type="date"],
+    input[type="number"] {
+      width: 100%;
+      padding: 7px 8px;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      font-size: 0.9rem;
+      margin-bottom: 6px;
+      background: #f9fafb;
+    }
+
+    input:focus {
+      outline: 2px solid #0f766e;
+      outline-offset: 1px;
+      background: #ffffff;
+    }
+
+    .btn {
+      border-radius: 999px;
+      padding: 7px 14px;
+      font-size: 0.9rem;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.1s ease, box-shadow 0.1s ease, background-color 0.1s ease;
+    }
+
+    .btn-primary {
+      background: #0f766e;
+      color: #ecfdf5;
+      font-weight: 600;
+      box-shadow: 0 3px 8px rgba(15, 118, 110, 0.35);
+    }
+
+    .btn-primary:hover {
+      background: #115e59;
+      transform: translateY(-1px);
+      box-shadow: 0 5px 12px rgba(15, 118, 110, 0.45);
+    }
+
+    .btn-secondary {
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .btn-secondary:hover {
+      background: #d1d5db;
+    }
+
+    .btn-sm {
+      padding: 4px 10px;
+      font-size: 0.8rem;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+
+    .message {
+      margin-top: 8px;
+      font-size: 0.85rem;
+      padding: 8px 10px;
+      border-radius: 8px;
+      display: none;
+    }
+
+    .message.error {
+      background: #fef2f2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+    }
+
+    .message.success {
+      background: #ecfdf5;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      font-size: 0.85rem;
+    }
+
+    thead {
+      background: #f3f4f6;
+    }
+
+    th,
+    td {
+      padding: 8px 6px;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    tr:hover {
+      background: #f9fafb;
+    }
+
+    .muted {
+      color: #6b7280;
+      font-size: 0.8rem;
+    }
+
+    .badge-status {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .badge-status-scheduled {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+
+    .badge-status-cancelled {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .badge-status-terminated {
+      background: #e5e7eb;
+      color: #374151;
+    }
+
+    .row-inline {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .row-inline > div {
+      min-width: 140px;
+      flex: 0 0 auto;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="logo">GRH – Rapports</div>
+  <nav>
+    <a href="index.html">Accueil</a>
+    <a href="patients.html">Patients</a>
+    <a href="doctors.html">Médecins</a>
+    <a href="appointments.html">Rendez-vous</a>
+    <a href="reports.html">Rapports</a>
+  </nav>
+</header>
+
+<main>
+  <h1>Rapports & statistiques</h1>
+
+  <div class="grid">
+    <!-- Bloc 1 : Rendez-vous d'une journée -->
+    <section class="card">
+      <h2>Rendez-vous d’une journée</h2>
+      <small>Liste des rendez-vous pour une date donnée, avec patient, médecin, heure et statut.</small>
+
+      <div class="row-inline">
+        <div>
+          <label for="dayDateInput">Date</label>
+          <input type="date" id="dayDateInput" />
+        </div>
+        <div>
+          <button class="btn btn-primary btn-sm" id="loadDayBtn">Charger</button>
+        </div>
+      </div>
+
+      <div id="dayMessage" class="message"></div>
+
+      <table>
+        <thead>
+        <tr>
+          <th>Patient</th>
+          <th>Médecin</th>
+          <th>Heure</th>
+          <th>Durée</th>
+          <th>Statut</th>
+        </tr>
+        </thead>
+        <tbody id="dayTableBody">
+        <!-- rempli en JS -->
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Bloc 2 : RDV par médecin -->
+    <section class="card">
+      <h2>Nombre de rendez-vous par médecin</h2>
+      <small>Vue globale du volume de rendez-vous pour chaque médecin.</small>
+
+      <div class="actions" style="margin-top: 8px;">
+        <button class="btn btn-secondary btn-sm" id="loadPerDoctorBtn">
+          🔄 Actualiser
+        </button>
+      </div>
+
+      <div id="perDoctorMessage" class="message"></div>
+
+      <table>
+        <thead>
+        <tr>
+          <th>Médecin</th>
+          <th>Nombre de rendez-vous</th>
+        </tr>
+        </thead>
+        <tbody id="perDoctorTableBody">
+        <!-- rempli en JS -->
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Bloc 3 : RDV par spécialité -->
+    <section class="card">
+      <h2>Nombre de rendez-vous par spécialité</h2>
+      <small>Regroupe les rendez-vous selon la spécialité des médecins.</small>
+
+      <div class="actions" style="margin-top: 8px;">
+        <button class="btn btn-secondary btn-sm" id="loadPerSpecialtyBtn">
+          🔄 Actualiser
+        </button>
+      </div>
+
+      <div id="perSpecialtyMessage" class="message"></div>
+
+      <table>
+        <thead>
+        <tr>
+          <th>Spécialité</th>
+          <th>Nombre de rendez-vous</th>
+        </tr>
+        </thead>
+        <tbody id="perSpecialtyTableBody">
+        <!-- rempli en JS -->
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Bloc 4 : Patients fréquents -->
+    <section class="card">
+      <h2>Patients fréquents</h2>
+      <small>Patients ayant eu plusieurs rendez-vous sur une période donnée.</small>
+
+      <div class="row-inline">
+        <div>
+          <label for="daysInput">Période (jours)</label>
+          <input type="number" id="daysInput" min="1" value="60" />
+        </div>
+        <div>
+          <button class="btn btn-primary btn-sm" id="loadFrequentBtn">
+            Charger
+          </button>
+        </div>
+      </div>
+
+      <div id="frequentMessage" class="message"></div>
+
+      <table>
+        <thead>
+        <tr>
+          <th>Patient</th>
+          <th>Nombre de visites</th>
+        </tr>
+        </thead>
+        <tbody id="frequentTableBody">
+        <!-- rempli en JS -->
+        </tbody>
+      </table>
+    </section>
+  </div>
+</main>
+
+<script>
+  const API_BASE = "http://localhost:8081";
+
+  const dayDateInput = document.getElementById("dayDateInput");
+  const dayTableBody = document.getElementById("dayTableBody");
+  const dayMessage = document.getElementById("dayMessage");
+  const loadDayBtn = document.getElementById("loadDayBtn");
+
+  const perDoctorTableBody = document.getElementById("perDoctorTableBody");
+  const perDoctorMessage = document.getElementById("perDoctorMessage");
+  const loadPerDoctorBtn = document.getElementById("loadPerDoctorBtn");
+
+  const perSpecialtyTableBody = document.getElementById("perSpecialtyTableBody");
+  const perSpecialtyMessage = document.getElementById("perSpecialtyMessage");
+  const loadPerSpecialtyBtn = document.getElementById("loadPerSpecialtyBtn");
+
+  const daysInput = document.getElementById("daysInput");
+  const frequentTableBody = document.getElementById("frequentTableBody");
+  const frequentMessage = document.getElementById("frequentMessage");
+  const loadFrequentBtn = document.getElementById("loadFrequentBtn");
+
+  function showMessage(el, text, type) {
+    el.textContent = text;
+    el.classList.remove("error", "success");
+    if (!text) {
+      el.style.display = "none";
+      return;
+    }
+    el.classList.add(type === "error" ? "error" : "success");
+    el.style.display = "block";
+  }
+
+  function isoToday() {
+    return new Date().toISOString().slice(0, 10);
+  }
+
+  function renderStatusBadge(status) {
+    if (!status) return "";
+    const s = status.toUpperCase();
+    let cls = "badge-status";
+    if (s === "SCHEDULED") cls += " badge-status-scheduled";
+    else if (s === "CANCELLED") cls += " badge-status-cancelled";
+    else if (s === "TERMINATED") cls += " badge-status-terminated";
+    return `<span class="${cls}">${status}</span>`;
+  }
+
+  // --- Bloc 1: RDV d'une journée ---
+  async function loadDayAppointments() {
+    const date = dayDateInput.value || isoToday();
+    try {
+      showMessage(dayMessage, "Chargement des rendez-vous…", "success");
+      const res = await fetch(API_BASE + "/reports/day?date=" + date);
+      if (!res.ok) {
+        showMessage(dayMessage, "Impossible de charger les rendez-vous du jour.", "error");
+        return;
+      }
+      const data = await res.json();
+      renderDayTable(data);
+      showMessage(dayMessage, "", "success");
+    } catch (e) {
+      console.error(e);
+      showMessage(dayMessage, "Erreur réseau lors du chargement.", "error");
+    }
+  }
+
+  function renderDayTable(appointments) {
+    dayTableBody.innerHTML = "";
+    if (!appointments || !appointments.length) {
+      const tr = document.createElement("tr");
+      const td = document.createElement("td");
+      td.colSpan = 5;
+      td.textContent = "Aucun rendez-vous pour cette date.";
+      tr.appendChild(td);
+      dayTableBody.appendChild(tr);
+      return;
+    }
+    appointments.forEach(a => {
+      const tr = document.createElement("tr");
+      const patientName =
+        a.patientName ||
+        (a.patient && a.patient.fullName) ||
+        a.patientId ||
+        "—";
+      const doctorName =
+        a.doctorName ||
+        (a.doctor && a.doctor.fullName) ||
+        a.doctorId ||
+        "—";
+      const time = a.time || "—";
+      const duration = a.durationMinutes != null ? a.durationMinutes + " min" : "—";
+      const statusCell = renderStatusBadge(a.status || "");
+
+      tr.innerHTML = `
+        <td>${patientName}</td>
+        <td>${doctorName}</td>
+        <td>${time}</td>
+        <td>${duration}</td>
+        <td>${statusCell}</td>
+      `;
+      dayTableBody.appendChild(tr);
+    });
+  }
+
+  // --- Bloc 2: RDV par médecin ---
+  async function loadAppointmentsPerDoctor() {
+    try {
+      showMessage(perDoctorMessage, "Chargement…", "success");
+      const res = await fetch(API_BASE + "/reports/appointments-per-doctor");
+      if (!res.ok) {
+        showMessage(perDoctorMessage, "Erreur lors du chargement des statistiques par médecin.", "error");
+        return;
+      }
+      const data = await res.json();
+      renderPerDoctorTable(data);
+      showMessage(perDoctorMessage, "", "success");
+    } catch (e) {
+      console.error(e);
+      showMessage(perDoctorMessage, "Erreur réseau lors du chargement.", "error");
+    }
+  }
+
+  function renderPerDoctorTable(stats) {
+    perDoctorTableBody.innerHTML = "";
+    if (!stats || !stats.length) {
+      const tr = document.createElement("tr");
+      const td = document.createElement("td");
+      td.colSpan = 2;
+      td.textContent = "Aucune donnée.";
+      tr.appendChild(td);
+      perDoctorTableBody.appendChild(tr);
+      return;
+    }
+    stats.forEach(s => {
+      const name = s.doctorName || s.name || s.doctorId || "—";
+      const count = s.count != null ? s.count : (s.total != null ? s.total : (s.appointmentCount != null ? s.appointmentCount : "—"));
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${name}</td>
+        <td>${count}</td>
+      `;
+      perDoctorTableBody.appendChild(tr);
+    });
+  }
+
+  // --- Bloc 3: RDV par spécialité ---
+  async function loadAppointmentsPerSpecialty() {
+    try {
+      showMessage(perSpecialtyMessage, "Chargement…", "success");
+      const res = await fetch(API_BASE + "/reports/appointments-per-specialty");
+      if (!res.ok) {
+        showMessage(perSpecialtyMessage, "Erreur lors du chargement des statistiques par spécialité.", "error");
+        return;
+      }
+      const data = await res.json();
+      renderPerSpecialtyTable(data);
+      showMessage(perSpecialtyMessage, "", "success");
+    } catch (e) {
+      console.error(e);
+      showMessage(perSpecialtyMessage, "Erreur réseau lors du chargement.", "error");
+    }
+  }
+
+  function renderPerSpecialtyTable(stats) {
+    perSpecialtyTableBody.innerHTML = "";
+    if (!stats || !stats.length) {
+      const tr = document.createElement("tr");
+      const td = document.createElement("td");
+      td.colSpan = 2;
+      td.textContent = "Aucune donnée.";
+      tr.appendChild(td);
+      perSpecialtyTableBody.appendChild(tr);
+      return;
+    }
+    stats.forEach(s => {
+      const spec = s.specialty || s.name || "—";
+      const count = s.count != null ? s.count : (s.total != null ? s.total : (s.appointmentCount != null ? s.appointmentCount : "—"));
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${spec}</td>
+        <td>${count}</td>
+      `;
+      perSpecialtyTableBody.appendChild(tr);
+    });
+  }
+
+  // --- Bloc 4: Patients fréquents ---
+  async function loadFrequentPatients() {
+    const days = parseInt(daysInput.value || "60", 10);
+    if (isNaN(days) || days <= 0) {
+      showMessage(frequentMessage, "Le nombre de jours doit être un entier positif.", "error");
+      return;
+    }
+    try {
+      showMessage(frequentMessage, "Chargement…", "success");
+      const res = await fetch(API_BASE + "/reports/frequent-patients?days=" + days);
+      if (!res.ok) {
+        showMessage(frequentMessage, "Erreur lors du chargement des patients fréquents.", "error");
+        return;
+      }
+      const data = await res.json();
+      renderFrequentTable(data);
+      showMessage(frequentMessage, "", "success");
+    } catch (e) {
+      console.error(e);
+      showMessage(frequentMessage, "Erreur réseau lors du chargement.", "error");
+    }
+  }
+
+  function renderFrequentTable(list) {
+    frequentTableBody.innerHTML = "";
+    if (!list || !list.length) {
+      const tr = document.createElement("tr");
+      const td = document.createElement("td");
+      td.colSpan = 2;
+      td.textContent = "Aucun patient fréquent pour cette période.";
+      tr.appendChild(td);
+      frequentTableBody.appendChild(tr);
+      return;
+    }
+    list.forEach(p => {
+      const name = p.patientName || p.fullName || p.name || p.patientId || "—";
+      const visits = p.visits != null ? p.visits : (p.count != null ? p.count : "—");
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${name}</td>
+        <td>${visits}</td>
+      `;
+      frequentTableBody.appendChild(tr);
+    });
+  }
+
+  // Listeners
+  loadDayBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    loadDayAppointments();
+  });
+
+  loadPerDoctorBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    loadAppointmentsPerDoctor();
+  });
+
+  loadPerSpecialtyBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    loadAppointmentsPerSpecialty();
+  });
+
+  loadFrequentBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    loadFrequentPatients();
+  });
+
+  // Initialisation
+  (function init() {
+    dayDateInput.value = isoToday();
+    loadDayAppointments();
+    loadAppointmentsPerDoctor();
+    loadAppointmentsPerSpecialty();
+    loadFrequentPatients();
+  })();
+</script>
+</body>
+</html>

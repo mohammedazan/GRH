@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>GRH - Gestion des rendez-vous</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      background: #f4f5fb;
+      color: #111827;
+    }
+
+    header {
+      background: #0f766e;
+      color: #ecfdf5;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 10px rgba(15, 118, 110, 0.35);
+    }
+
+    header .logo {
+      font-size: 1.2rem;
+      font-weight: 650;
+    }
+
+    header nav a {
+      color: #ecfdf5;
+      text-decoration: none;
+      margin-left: 14px;
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    header nav a:hover {
+      text-decoration: underline;
+      opacity: 1;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 24px auto 40px auto;
+      padding: 0 16px;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.8fr);
+      gap: 18px;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 16px 14px;
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
+      border: 1px solid #e5e7eb;
+      margin-bottom: 14px;
+    }
+
+    .card h2 {
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+    }
+
+    .card small {
+      color: #6b7280;
+      font-size: 0.8rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      margin-bottom: 4px;
+      color: #374151;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="time"],
+    input[type="number"],
+    select {
+      width: 100%;
+      padding: 7px 8px;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+      background: #f9fafb;
+    }
+
+    input:focus,
+    select:focus {
+      outline: 2px solid #0f766e;
+      outline-offset: 1px;
+      background: #ffffff;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .row-3 {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1fr;
+      gap: 10px;
+    }
+
+    @media (max-width: 700px) {
+      .row,
+      .row-3 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .btn {
+      border-radius: 999px;
+      padding: 8px 16px;
+      font-size: 0.9rem;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.1s ease, box-shadow 0.1s ease, background-color 0.1s ease;
+    }
+
+    .btn-primary {
+      background: #0f766e;
+      color: #ecfdf5;
+      font-weight: 600;
+      box-shadow: 0 3px 8px rgba(15, 118, 110, 0.35);
+    }
+
+    .btn-primary:hover {
+      background: #115e59;
+      transform: translateY(-1px);
+      box-shadow: 0 5px 12px rgba(15, 118, 110, 0.45);
+    }
+
+    .btn-secondary {
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .btn-secondary:hover {
+      background: #d1d5db;
+    }
+
+    .btn-danger {
+      background: #b91c1c;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #991b1b;
+    }
+
+    .btn-sm {
+      padding: 4px 10px;
+      font-size: 0.8rem;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+
+    .message {
+      margin-top: 8px;
+      font-size: 0.85rem;
+      padding: 8px 10px;
+      border-radius: 8px;
+      display: none;
+    }
+
+    .message.error {
+      background: #fef2f2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+    }
+
+    .message.success {
+      background: #ecfdf5;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      font-size: 0.85rem;
+    }
+
+    thead {
+      background: #f3f4f6;
+    }
+
+    th,
+    td {
+      padding: 8px 6px;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: left;
+    }
+
+    tr:hover {
+      background: #f9fafb;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .badge-scheduled {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+
+    .badge-cancelled {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .badge-terminated {
+      background: #e5e7eb;
+      color: #374151;
+    }
+
+    .slot-list {
+      margin-top: 6px;
+      font-size: 0.8rem;
+      max-height: 140px;
+      overflow-y: auto;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      padding: 6px 8px;
+      background: #f9fafb;
+    }
+
+    .slot-list div {
+      padding: 2px 0;
+    }
+
+    .slot-list span {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: flex-end;
+      margin-top: 4px;
+    }
+
+    .filter-row > div {
+      min-width: 140px;
+      flex: 1;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="logo">GRH – Rendez-vous</div>
+  <nav>
+    <a href="index.html">Accueil</a>
+    <a href="patients.html">Patients</a>
+    <a href="doctors.html">Médecins</a>
+    <a href="appointments.html">Rendez-vous</a>
+    <a href="reports.html">Rapports</a>
+  </nav>
+</header>
+
+<main>
+  <h1>Gestion des rendez-vous</h1>
+
+  <div class="layout">
+    <!-- Colonne gauche : formulaire + créneaux -->
+    <section>
+      <div class="card">
+        <h2>Nouveau / Modifier un rendez-vous</h2>
+        <small>Choisissez un patient, un médecin, une date et une heure. Les conflits d’horaires seront vérifiés côté backend.</small>
+
+        <form id="appointmentForm" style="margin-top: 10px;">
+          <input type="hidden" id="appointmentId" />
+
+          <div class="row">
+            <div>
+              <label for="patientSelect">Patient</label>
+              <select id="patientSelect" required>
+                <option value="">-- Sélectionner un patient --</option>
+              </select>
+            </div>
+            <div>
+              <label for="doctorSelect">Médecin</label>
+              <select id="doctorSelect" required>
+                <option value="">-- Sélectionner un médecin --</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row-3">
+            <div>
+              <label for="dateInput">Date</label>
+              <input type="date" id="dateInput" required />
+            </div>
+            <div>
+              <label for="timeInput">Heure</label>
+              <input type="time" id="timeInput" required />
+            </div>
+            <div>
+              <label for="durationInput">Durée (min)</label>
+              <input type="number" id="durationInput" min="5" step="5" value="30" />
+            </div>
+          </div>
+
+          <div class="actions">
+            <button type="submit" class="btn btn-primary" id="submitBtn">
+              💾 Enregistrer
+            </button>
+            <button type="button" class="btn btn-secondary" id="resetBtn">
+              ↺ Réinitialiser
+            </button>
+          </div>
+
+          <div id="formMessage" class="message"></div>
+        </form>
+      </div>
+
+      <div class="card">
+        <h2>Créneaux disponibles</h2>
+        <small>
+          Sélectionnez un médecin et une date puis cliquez sur “Charger les créneaux disponibles”.
+        </small>
+        <div class="actions" style="margin-top: 8px;">
+          <button type="button" class="btn btn-secondary" id="loadSlotsBtn">
+            🔍 Charger les créneaux disponibles
+          </button>
+        </div>
+        <div id="slotsMessage" class="message"></div>
+        <div id="slotsContainer" class="slot-list">
+          <div>Aucun créneau chargé.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Colonne droite : liste et filtres -->
+    <section>
+      <div class="card">
+        <h2>Rendez-vous</h2>
+        <small>Filtrez par date et médecin. Les rendez-vous passés peuvent être marqués “Terminated” côté backend.</small>
+
+        <div class="filter-row">
+          <div>
+            <label for="filterDate">Date</label>
+            <input type="date" id="filterDate" />
+          </div>
+          <div>
+            <label for="filterDoctor">Médecin</label>
+            <select id="filterDoctor">
+              <option value="">Tous les médecins</option>
+            </select>
+          </div>
+          <div style="flex: 0 0 auto;">
+            <button class="btn btn-secondary btn-sm" id="applyFilterBtn">Filtrer</button>
+          </div>
+        </div>
+
+        <div id="listMessage" class="message" style="margin-top: 8px;"></div>
+
+        <table>
+          <thead>
+          <tr>
+            <th>Patient</th>
+            <th>Médecin</th>
+            <th>Date</th>
+            <th>Heure</th>
+            <th>Durée</th>
+            <th>Statut</th>
+            <th>Actions</th>
+          </tr>
+          </thead>
+          <tbody id="appointmentsTableBody">
+          <!-- lignes remplies en JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</main>
+
+<script>
+  const API_BASE = "http://localhost:8081";
+
+  const patientSelect = document.getElementById("patientSelect");
+  const doctorSelect = document.getElementById("doctorSelect");
+  const filterDoctor = document.getElementById("filterDoctor");
+  const filterDate = document.getElementById("filterDate");
+  const appointmentsTableBody = document.getElementById("appointmentsTableBody");
+
+  const appointmentForm = document.getElementById("appointmentForm");
+  const appointmentIdInput = document.getElementById("appointmentId");
+  const dateInput = document.getElementById("dateInput");
+  const timeInput = document.getElementById("timeInput");
+  const durationInput = document.getElementById("durationInput");
+  const formMessage = document.getElementById("formMessage");
+  const listMessage = document.getElementById("listMessage");
+  const slotsMessage = document.getElementById("slotsMessage");
+  const slotsContainer = document.getElementById("slotsContainer");
+  const submitBtn = document.getElementById("submitBtn");
+  const resetBtn = document.getElementById("resetBtn");
+  const loadSlotsBtn = document.getElementById("loadSlotsBtn");
+  const applyFilterBtn = document.getElementById("applyFilterBtn");
+
+  function showMessage(el, text, type) {
+    el.textContent = text;
+    el.classList.remove("error", "success");
+    if (!text) {
+      el.style.display = "none";
+      return;
+    }
+    el.classList.add(type === "error" ? "error" : "success");
+    el.style.display = "block";
+  }
+
+  function isoToday() {
+    return new Date().toISOString().slice(0, 10);
+  }
+
+  async function loadPatients() {
+    try {
+      const res = await fetch(API_BASE + "/patients");
+      if (!res.ok) return;
+      const data = await res.json();
+      patientSelect.innerHTML = '<option value="">-- Sélectionner un patient --</option>';
+      data.forEach(p => {
+        const opt = document.createElement("option");
+        opt.value = p.id;
+        opt.textContent = p.fullName || p.name || ("Patient " + p.id);
+        patientSelect.appendChild(opt);
+      });
+    } catch (e) {
+      console.warn("Erreur chargement patients", e);
+    }
+  }
+
+  async function loadDoctors() {
+    try {
+      const res = await fetch(API_BASE + "/doctors");
+      if (!res.ok) return;
+      const data = await res.json();
+      doctorSelect.innerHTML = '<option value="">-- Sélectionner un médecin --</option>';
+      filterDoctor.innerHTML = '<option value="">Tous les médecins</option>';
+      data.forEach(d => {
+        const label = d.fullName
+          ? (d.fullName + (d.specialty ? " (" + d.specialty + ")" : ""))
+          : ("Médecin " + d.id);
+        const opt1 = document.createElement("option");
+        opt1.value = d.id;
+        opt1.textContent = label;
+        doctorSelect.appendChild(opt1);
+
+        const opt2 = document.createElement("option");
+        opt2.value = d.id;
+        opt2.textContent = label;
+        filterDoctor.appendChild(opt2);
+      });
+    } catch (e) {
+      console.warn("Erreur chargement docteurs", e);
+    }
+  }
+
+  async function loadAppointments() {
+    const date = filterDate.value || isoToday();
+    try {
+      showMessage(listMessage, "Chargement des rendez-vous…", "success");
+      const res = await fetch(API_BASE + "/appointments/day?date=" + date);
+      if (!res.ok) {
+        showMessage(listMessage, "Impossible de charger les rendez-vous.", "error");
+        return;
+      }
+      const data = await res.json();
+      renderAppointments(data);
+      showMessage(listMessage, "", "success");
+    } catch (e) {
+      console.error(e);
+      showMessage(listMessage, "Erreur lors du chargement des rendez-vous.", "error");
+    }
+  }
+
+  function renderAppointments(appointments) {
+    const doctorFilter = filterDoctor.value;
+    appointmentsTableBody.innerHTML = "";
+
+    const filtered = doctorFilter
+      ? appointments.filter(a => a.doctorId === doctorFilter || (a.doctor && a.doctor.id === doctorFilter))
+      : appointments;
+
+    if (filtered.length === 0) {
+      const tr = document.createElement("tr");
+      const td = document.createElement("td");
+      td.colSpan = 7;
+      td.textContent = "Aucun rendez-vous pour ces critères.";
+      tr.appendChild(td);
+      appointmentsTableBody.appendChild(tr);
+      return;
+    }
+
+    filtered.forEach(a => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${a.patientName || (a.patient && a.patient.fullName) || a.patientId || "—"}</td>
+        <td>${a.doctorName || (a.doctor && a.doctor.fullName) || a.doctorId || "—"}</td>
+        <td>${a.date || "—"}</td>
+        <td>${a.time || "—"}</td>
+        <td>${a.durationMinutes != null ? a.durationMinutes + " min" : "—"}</td>
+        <td>${renderStatusBadge(a.status)}</td>
+        <td></td>
+      `;
+      const actionsTd = tr.lastElementChild;
+
+      const editBtn = document.createElement("button");
+      editBtn.className = "btn btn-secondary btn-sm";
+      editBtn.textContent = "Modifier";
+      editBtn.onclick = () => fillFormForEdit(a);
+
+      const cancelBtn = document.createElement("button");
+      cancelBtn.className = "btn btn-danger btn-sm";
+      cancelBtn.textContent = "Annuler";
+      cancelBtn.onclick = () => cancelAppointment(a.id);
+
+      actionsTd.appendChild(editBtn);
+      actionsTd.appendChild(cancelBtn);
+
+      appointmentsTableBody.appendChild(tr);
+    });
+  }
+
+  function renderStatusBadge(status) {
+    if (!status) return "";
+    const s = status.toUpperCase();
+    let cls = "badge";
+    if (s === "SCHEDULED") cls += " badge-scheduled";
+    else if (s === "CANCELLED") cls += " badge-cancelled";
+    else if (s === "TERMINATED") cls += " badge-terminated";
+    return `<span class="${cls}">${status}</span>`;
+  }
+
+  function fillFormForEdit(a) {
+    appointmentIdInput.value = a.id;
+    if (a.patientId) patientSelect.value = a.patientId;
+    else if (a.patient && a.patient.id) patientSelect.value = a.patient.id;
+
+    if (a.doctorId) doctorSelect.value = a.doctorId;
+    else if (a.doctor && a.doctor.id) doctorSelect.value = a.doctor.id;
+
+    if (a.date) dateInput.value = a.date;
+    if (a.time) timeInput.value = a.time.length === 5 ? a.time : a.time.slice(0, 5);
+    if (a.durationMinutes != null) durationInput.value = a.durationMinutes;
+
+    submitBtn.textContent = "✏️ Mettre à jour";
+    showMessage(formMessage, "Mode édition : vous modifiez un rendez-vous existant.", "success");
+  }
+
+  function resetForm() {
+    appointmentForm.reset();
+    appointmentIdInput.value = "";
+    durationInput.value = 30;
+    submitBtn.textContent = "💾 Enregistrer";
+    showMessage(formMessage, "", "success");
+  }
+
+  async function cancelAppointment(id) {
+    if (!confirm("Confirmer l’annulation de ce rendez-vous ?")) return;
+    try {
+      const res = await fetch(API_BASE + "/appointments/" + id, {
+        method: "DELETE"
+      });
+      if (!res.ok) {
+        let msg = "Impossible d’annuler ce rendez-vous.";
+        try {
+          const err = await res.json();
+          if (err && err.message) msg = err.message;
+        } catch {}
+        alert(msg);
+        return;
+      }
+      await loadAppointments();
+    } catch (e) {
+      alert("Erreur réseau lors de l’annulation.");
+    }
+  }
+
+  appointmentForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const id = appointmentIdInput.value;
+    const body = {
+      patientId: patientSelect.value,
+      doctorId: doctorSelect.value,
+      date: dateInput.value,
+      time: timeInput.value,
+      durationMinutes: durationInput.value ? parseInt(durationInput.value, 10) : null
+    };
+
+    if (!body.patientId || !body.doctorId || !body.date || !body.time) {
+      showMessage(formMessage, "Veuillez remplir tous les champs obligatoires.", "error");
+      return;
+    }
+
+    const url = id
+      ? API_BASE + "/appointments/" + id
+      : API_BASE + "/appointments";
+    const method = id ? "PUT" : "POST";
+
+    try {
+      const res = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      });
+
+      if (!res.ok) {
+        let msg = "Erreur lors de l’enregistrement du rendez-vous.";
+        let status = res.status;
+        try {
+          const err = await res.json();
+          if (err && err.message) msg = err.message;
+        } catch {}
+
+        if (status === 409) {
+          msg = msg || "Conflit : ce créneau est déjà réservé pour ce médecin.";
+        }
+
+        showMessage(formMessage, msg, "error");
+        return;
+      }
+
+      showMessage(formMessage, id ? "Rendez-vous mis à jour avec succès." : "Rendez-vous créé avec succès.", "success");
+      resetForm();
+      // rechargement des rendez-vous pour la date choisie
+      filterDate.value = dateInput.value || filterDate.value || isoToday();
+      await loadAppointments();
+    } catch (e2) {
+      console.error(e2);
+      showMessage(formMessage, "Erreur réseau lors de l’enregistrement.", "error");
+    }
+  });
+
+  resetBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    resetForm();
+  });
+
+  applyFilterBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    loadAppointments();
+  });
+
+  loadSlotsBtn.addEventListener("click", async () => {
+    const doctorId = doctorSelect.value;
+    const date = dateInput.value;
+    if (!doctorId || !date) {
+      showMessage(slotsMessage, "Veuillez d’abord choisir un médecin et une date.", "error");
+      return;
+    }
+    try {
+      showMessage(slotsMessage, "Chargement des créneaux disponibles…", "success");
+      const res = await fetch(
+        API_BASE + "/doctors/" + doctorId + "/available-slots?date=" + date
+      );
+      if (!res.ok) {
+        showMessage(slotsMessage, "Impossible de charger les créneaux disponibles.", "error");
+        return;
+      }
+      const slots = await res.json();
+      renderSlots(slots);
+      showMessage(slotsMessage, "", "success");
+    } catch (e) {
+      console.error(e);
+      showMessage(slotsMessage, "Erreur réseau lors du chargement des créneaux.", "error");
+    }
+  });
+
+  function renderSlots(slots) {
+    slotsContainer.innerHTML = "";
+    if (!slots || slots.length === 0) {
+      slotsContainer.innerHTML = "<div>Aucun créneau disponible pour cette date.</div>";
+      return;
+    }
+    slots.forEach(s => {
+      const div = document.createElement("div");
+      const start = s.start || s.startTime || "";
+      const end = s.end || s.endTime || "";
+      div.innerHTML = `• <span>${start} → ${end}</span>`;
+      div.style.cursor = "pointer";
+      div.onclick = () => {
+        if (start) {
+          timeInput.value = start.length === 5 ? start : start.slice(0, 5);
+        }
+        alert("Créneau sélectionné : " + start + " → " + end);
+      };
+      slotsContainer.appendChild(div);
+    });
+  }
+
+  // Initialisation
+  (function init() {
+    const today = isoToday();
+    dateInput.value = today;
+    filterDate.value = today;
+    loadPatients();
+    loadDoctors().then(loadAppointments);
+  })();
+</script>
+</body>
+</html>
