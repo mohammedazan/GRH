@@ -381,7 +381,8 @@
 
 <script>
   const API_BASE = "http://localhost:8081";
-
+  let patientsById = {};
+  let doctorsById = {};
   const dayDateInput = document.getElementById("dayDateInput");
   const dayTableBody = document.getElementById("dayTableBody");
   const dayMessage = document.getElementById("dayMessage");
@@ -409,6 +410,40 @@
     }
     el.classList.add(type === "error" ? "error" : "success");
     el.style.display = "block";
+  }
+
+  async function loadPatients() {
+    try {
+      const res = await fetch(API_BASE + "/patients");
+      if (!res.ok) return;
+      const data = await res.json();
+
+      patientsById = {};
+      data.forEach(p => {
+        if (p.id) {
+          patientsById[p.id] = p;
+        }
+      });
+    } catch (e) {
+      console.warn("Erreur chargement patients", e);
+    }
+  }
+
+  async function loadDoctors() {
+    try {
+      const res = await fetch(API_BASE + "/doctors");
+      if (!res.ok) return;
+      const data = await res.json();
+
+      doctorsById = {};
+      data.forEach(d => {
+        if (d.id) {
+          doctorsById[d.id] = d;
+        }
+      });
+    } catch (e) {
+      console.warn("Erreur chargement médecins", e);
+    }
   }
 
   function isoToday() {
@@ -457,14 +492,17 @@
     }
     appointments.forEach(a => {
       const tr = document.createElement("tr");
+      const patient = a.patientId ? patientsById[a.patientId] : null;
+      const doctor  = a.doctorId ? doctorsById[a.doctorId] : null;
       const patientName =
         a.patientName ||
-        (a.patient && a.patient.fullName) ||
+        (patient && patient.fullName) ||
         a.patientId ||
         "—";
+
       const doctorName =
         a.doctorName ||
-        (a.doctor && a.doctor.fullName) ||
+        (doctor && doctor.fullName) ||
         a.doctorId ||
         "—";
       const time = a.time || "—";
@@ -512,7 +550,13 @@
       return;
     }
     stats.forEach(s => {
-      const name = s.doctorName || s.name || s.doctorId || "—";
+      const doc = s.doctorId ? doctorsById[s.doctorId] : null;
+      const name =
+        s.doctorName ||
+        s.name ||
+        (doc && doc.fullName) ||
+        s.doctorId ||
+        "—";
       const count = s.count != null ? s.count : (s.total != null ? s.total : (s.appointmentCount != null ? s.appointmentCount : "—"));
       const tr = document.createElement("tr");
       tr.innerHTML = `
@@ -552,9 +596,12 @@
       perSpecialtyTableBody.appendChild(tr);
       return;
     }
+    
     stats.forEach(s => {
-      const spec = s.specialty || s.name || "—";
-      const count = s.count != null ? s.count : (s.total != null ? s.total : (s.appointmentCount != null ? s.appointmentCount : "—"));
+      const spec = s.specialty || s.speciality || s.name || "—";
+      const count = s.count != null ? s.count :
+              (s.total != null ? s.total :
+              (s.appointmentCount != null ? s.appointmentCount : "—"));
       const tr = document.createElement("tr");
       tr.innerHTML = `
         <td>${spec}</td>
@@ -599,7 +646,14 @@
       return;
     }
     list.forEach(p => {
-      const name = p.patientName || p.fullName || p.name || p.patientId || "—";
+      const pat = p.patientId ? patientsById[p.patientId] : null;
+      const name =
+        p.patientName ||
+        (pat && pat.fullName) ||
+        p.fullName ||
+        p.name ||
+        p.patientId ||
+        "—";
       const visits = p.visits != null ? p.visits : (p.count != null ? p.count : "—");
       const tr = document.createElement("tr");
       tr.innerHTML = `
@@ -632,8 +686,9 @@
   });
 
   // Initialisation
-  (function init() {
+  (async function init() {
     dayDateInput.value = isoToday();
+    await Promise.all([loadPatients(), loadDoctors()]);
     loadDayAppointments();
     loadAppointmentsPerDoctor();
     loadAppointmentsPerSpecialty();
